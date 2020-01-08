@@ -1,0 +1,151 @@
+### Netty 入门与实战：仿写微信 IM 即时通讯系统学习笔记
+- 源代码: https://github.com/lightningMan/flash-netty/
+
+- NIO与OIO的区别
+   - 解决线程资源有限
+       -  使用selector管理多个连接，减少创建线程的开销。当有新连接进来时，将它注册到一个selector上，批量监控是否有可读的数据连接
+   - 解决线程切换效率低下
+       - 由于NIO模型中线程数量大大降低，线程切换的开销也变低了
+   - 解决IO读写面向流
+       -  IO读写是面向流，意味着读完之后流无法再次读取，需要自己缓存数据。而NIO是面向Buffer的，可以随意读取Buffer中的任一字节，不需要自己缓存，只需移动指针。
+- NIO编程核心思想
+   - NIO 模型中通常会有两个线程，每个线程绑定一个轮询器 selector ，例如 serverSelector负责轮询是否有新的连接，clientSelector负责轮询连接是否有数据可读
+   - 服务端监测到新的连接之后，不再创建一个新的线程，而是直接将新连接绑定到clientSelector上，这样就不用 IO 模型中 1w 个 while 循环在死等
+   - clientSelector被一个 while 死循环包裹着，如果在某一时刻有多条连接有数据可读，那么通过clientSelector.select(1)方法可以轮询出来，进而批量处理
+   - 数据的读写面向 Buffer
+- JAVA原始NIO相比Netty的缺点
+   - JDK 的 NIO 编程模型不友好，ByteBuffer 的 Api 简直反人类
+   - 对 NIO 编程来说，连简单的自定义协议拆包都要你自己实现
+   - JDK 的 NIO 底层由 epoll 实现，该实现饱受诟病的空轮询 bug 会导致 cpu 飙升 100%
+   - 项目庞大之后，自行实现的 NIO 很容易出现各类 bug，维护成本较高
+-  服务端的启动
+   - ServerBootstrap
+   - NioEventLoopGroup ->  boss/worker
+   - .channel -> NioServerSocketChannel
+   - .group
+   - .handler
+   - .childHandler
+   - ChannelInitializer
+   - childOption
+   - .option
+   - .bind
+- 客户端的启动
+   - Bootstrap
+   - channel -> NioSocketChannel
+   - option
+   - handler
+   - attr
+   - pipeline  -> SocketChannel.pipeline
+- channelHandler
+   - ChannelInboundHandlerAdapter 主要用于实现其接口 ChannelInboundHandler的所有方法,这样我们只需要重写我们感兴趣的方法,不用实现handler中的每一个方法
+   - ChannelOutboundHandlerAdapter 主要用于实现 ChannelOutboundHandler的所有方法
+- pipeline
+   - ByteToMessageDecoder 实现自定义解码 不用关心ByteBuf的强转和解码结构的传递
+   - MessageToByteEncoder 实现自定义编码 不用关系ByteBuf的创建,不用每次向对端写Java对象都进行一次编码
+   - SimpleChannelInboundHandler 实现每一种指令的处理,将类型转换操作交给编解码处理器,必须实现channelRead0来完成request/response的处理
+   
+- 粘包拆包
+   - Netty 自带的拆包器 
+       - FixedLengthFrameDecoder 固定长度的拆包器  
+             - 如果你的应用层协议非常简单，每个数据包的长度都是固定的，比如 100，那么只需要把这个拆包器加到 pipeline 中，Netty 会把一个个长度为 100 的数据包 (ByteBuf) 传递到下一个 channelHandler。                            
+       - LineBasedFrameDecoder 行拆包器
+             - 从字面意思来看，发送端发送数据包的时候，每个数据包之间以换行符作为分隔，接收端通过 LineBasedFrameDecoder 将粘过的 ByteBuf 拆分成一个个完整的应用层数据包。
+       - DelimiterBasedFrameDecoder 分隔符拆包器
+             - DelimiterBasedFrameDecoder 是行拆包器的通用版本，只不过我们可以自定义分隔符。
+       - LengthFieldBasedFrameDecoder 基于长度域拆包器 《数据长度》
+             - 最后一种拆包器是最通用的一种拆包器，只要你的自定义协议中包含长度域字段，均可以使用这个拆包器来实现应用层拆包。
+   - LengthFieldBasedFrameDecoder 长度域
+       - new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4); 第一个参数指的是数据包的最大长度,第二个参数指的是长度域的偏移量,第三个参数指的是长度域的长度
+       - 需要在 pipeline 的最前面加上这个拆包器
+   - 拒绝非本协议连接
+       - 解码器解码时判断协议标识,如果非本协议,则拒绝处理该报文
+       
+       
+- channelHandler lifeCycle
+    - 开启连接: handlerAdded -> channelRegister -> channelActive -> channelRead -> channelReadComplete
+        - handlerAdded  指的是当检测到新连接之后，调用 ch.pipeline().addLast(new LifeCyCleTestHandler()); 之后的回调，表示在当前的 channel 中，已经成功添加了一个 handler 处理器。
+        - channelRegistered 
+            - 这个回调方法，表示当前的 channel 的所有的逻辑处理已经和某个 NIO 线程建立了绑定关系，类似 socket.accept 到新的连接，然后创建一个线程来处理这条连接的读写，只不过 Netty 里面是使用了线程池的方式，
+                只需要从线程池里面去抓一个线程绑定在这个 channel 上即可。
+        - channelActive  当 channel 的所有的业务逻辑链准备完毕（也就是说 channel 的 pipeline 中已经添加完所有的 handler）以及绑定好一个 NIO 线程之后，这条连接算是真正激活了，接下来就会回调到此方法。
+        - channelRead 
+        - channelReadComplete
+    - 关闭连接: channelInactive -> channelUnregistered -> handlerRemoved
+        - channelInactive 表面这条连接已经被关闭了，这条连接在 TCP 层面已经不再是 ESTABLISH 状态了
+        - channelUnregistered 既然连接已经被关闭，那么与这条连接绑定的线程就不需要对这条连接负责了，这个回调就表明与这条连接对应的 NIO 线程移除掉对这条连接的处理
+        - handlerRemoved 我们给这条连接上添加的所有的业务逻辑处理器都给移除掉
+   
+- channelHandler lifeCycle应用举例
+    - ChannelInitializer 的实现原理
+        - 仔细翻看一下我们的服务端启动代码，我们在给新连接定义 handler 的时候，其实只是通过 childHandler() 方法给新连接设置了一个 handler，这个 handler 就是 ChannelInitializer，
+           而在 ChannelInitializer 的 initChannel() 方法里面，我们通过拿到 channel 对应的 pipeline，然后往里面塞 handler  
+        - ChannelInitializer 其实就利用了 Netty 的 handler 生命周期中 channelRegistered() 与 handlerAdded() 两个特性，我们简单翻一翻 ChannelInitializer 这个类的源代码
+        - ChannelInitializer:initChannel、 handlerAdded、channelRegistered
+    - handlerAdded() 与 handlerRemoved()  这两个方法通常可以用在一些资源的申请和释放
+    - channelActive() 与 channelInActive()
+        - 对我们的应用程序来说，这两个方法表明的含义是 TCP 连接的建立与释放，通常我们在这两个回调里面统计单机的连接数，channelActive() 被调用，连接数加一，channelInActive() 被调用，连接数减一
+        - 另外，我们也可以在 channelActive() 方法中，实现对客户端连接 ip 黑白名单的过滤
+        - 统计用户连接数、流量
+    - channelRead
+        - 拆包粘包原理,https://www.jianshu.com/p/dc26e944da95
+     - channelReadComplete
+         - 优化 ctx.channel().flush() 批量刷新
+
+- 处理优化
+     - 共享handler
+         - 对于没有成员变量的handler可以使用单例模式,提高效率，避免创建很多小的对象
+         - @ChannelHandler.Sharable
+         - LoginRequestHandler is not a @Sharable handler, so can't be added or removed multiple times.
+     - 合并编解码器
+         - extends MessageToMessageCodec<ByteBuf,Packet>
+         - 编码器当outbound处理，解码器当做inbound处理即可
+     -  压缩 handler  合并平行 handler
+         - handler和handler之间无先后顺序时，可以放在一个map中，通过类型判断处理
+     - 更改事件传播源
+         -  ctx.writeAndFlush() 替代 ctx.channel.writeAndFlush()
+         - 如果明确知道后面的操作只需要解码即可，就可以直接使用ctx.writeAndFlush
+     - 减少阻塞主线程的操作
+         - channelRead0 异步处理
+     - 统计处理时长
+         - 使用addListener监听channel信息 -> ChannelFuture
+         
+- 心跳和空闲检测
+     - 连接假死原因
+         - 应用程序出现线程堵塞，无法进行数据的读写。
+         - 客户端或者服务端网络相关的设备出现故障，比如网卡，机房故障。
+         - 公网丢包
+     - 服务端空闲检测
+         - IdleStateHandler判断是否是连接假死，channelIdle方法处理假死的连接，一般是手动关闭
+         - this(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds,TimeUnit.SECONDS)
+     - 客户端定时发心跳
+         - heartbeat 定时发送
+         - 主要用于排除客户端确实没有数据传输的正常情况
+     - 服务端回复心跳与客户端空闲检测
+         - heartbeatHandler、空闲检测
+         
+     
+- netty-user-guide:https://netty.io/wiki/user-guide-for-4.x.html
+- netty-new-feature:https://netty.io/wiki/new-and-noteworthy-in-4.1.html   
+- netty-websocket-test-demo: https://github.com/netty/netty/tree/4.1/example/src/main/java/io/netty/example/http/websocketx   
+- Netty源码分析
+    - [netty源码分析之服务端启动全解析](https://juejin.im/post/5bc92271e51d450ea4024c75)
+    - [netty源码分析之新连接接入全解析](https://juejin.im/post/5bcd01ccf265da0aa664f99b)
+    - [netty源码分析之揭开reactor线程的面纱（一）](https://www.jianshu.com/p/0d0eece6d467)
+    - [netty源码分析之揭开reactor线程的面纱（二）](https://www.jianshu.com/p/467a9b41833e)
+    - [netty源码分析之揭开reactor线程的面纱（三](https://juejin.im/post/5bd1120cf265da0af7755b6c)
+    - [Netty 源码分析之拆包器的奥秘](https://juejin.im/post/5bda41646fb9a0225703923d)
+    - [Netty源码分析之LengthFieldBasedFrameDecoder](https://juejin.im/post/5bedf8636fb9a049b07cec90)
+    - [netty源码分析之writeAndFlush全解析](https://www.jianshu.com/p/feaeaab2ce56)
+    - [netty源码分析之pipeline(一)](https://www.jianshu.com/p/6efa9c5fa702)
+    - [netty源码分析之pipeline(二)](https://www.jianshu.com/p/087b7e9a27a2)
+    - [netty 堆外内存泄露排查盛宴](https://juejin.im/post/5b8dbbd4518825430810d760)
+    - [海量连接服务端jvm参数调优杂记](https://www.jianshu.com/p/051d566e110d)
+    - [一次netty"引发的"诡异old gc问题排查过程](https://www.jianshu.com/p/702ef10102e4)
+          
+- 拓展问题
+   - 集群模式下多机器,netty 服务端如何工作？
+      - nginx负载均衡，redis存储channel关系和ip,服务器之间互相转发消息
+   - websocket-netty如何应用？
+      - netty-sockio redsion 如何使用？
+   - 使用netty实现消息推送，在生产环境需要处理那些常见问题？
+   - dubbo等RPC服务是如何使用netty的？

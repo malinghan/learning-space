@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/algorithm-learning/algorithm-learning.iml" filepath="$PROJECT_DIR$/algorithm-learning/algorithm-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/es-demo/es-demo.iml" filepath="$PROJECT_DIR$/es-demo/es-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-common/imooc-dubbo-common.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-common/imooc-dubbo-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-item-api/imooc-dubbo-item-api.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-item-api/imooc-dubbo-item-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-item-service/imooc-dubbo-item-service.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-item-service/imooc-dubbo-item-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-order-api/imooc-dubbo-order-api.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-order-api/imooc-dubbo-order-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-order-service/imooc-dubbo-order-service.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-order-service/imooc-dubbo-order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-web/imooc-dubbo-web.iml" filepath="$PROJECT_DIR$/zk-learning/imooc-dubbo-zklock/imooc-dubbo-web/imooc-dubbo-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/jdk8-learning/jdk8-learning.iml" filepath="$PROJECT_DIR$/demo/jdk8-learning/jdk8-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jvm/jvm.iml" filepath="$PROJECT_DIR$/jvm/jvm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/learning-space.iml" filepath="$PROJECT_DIR$/.idea/learning-space.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netty-learning/netty-learning.iml" filepath="$PROJECT_DIR$/netty-learning/netty-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/spring-bean-learning/spring-bean-learning.iml" filepath="$PROJECT_DIR$/demo/spring-bean-learning/spring-bean-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-data-elasticsearch/spring-data-elasticsearch.iml" filepath="$PROJECT_DIR$/spring-data-elasticsearch/spring-data-elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/spring-data-jpa-demo/spring-data-jpa-demo.iml" filepath="$PROJECT_DIR$/demo/spring-data-jpa-demo/spring-data-jpa-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/spring-data-redis-demo/spring-data-redis-demo.iml" filepath="$PROJECT_DIR$/demo/spring-data-redis-demo/spring-data-redis-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/spring-orm-demo/spring-orm-demo.iml" filepath="$PROJECT_DIR$/demo/spring-orm-demo/spring-orm-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-learning/springboot-learning.iml" filepath="$PROJECT_DIR$/springboot-learning/springboot-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/zk-curator-demo/zk-curator-maven.iml" filepath="$PROJECT_DIR$/zk-learning/zk-curator-demo/zk-curator-maven.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/zk-learning.iml" filepath="$PROJECT_DIR$/zk-learning/zk-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk-learning/zk-starter/zk-starter.iml" filepath="$PROJECT_DIR$/zk-learning/zk-starter/zk-starter.iml" />
+    </modules>
+  </component>
+</project>
