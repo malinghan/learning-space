@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="datas" />
+        <module name="imooc-dubbo-common" />
+        <module name="imooc-dubbo-item-api" />
+        <module name="imooc-dubbo-item-service" />
+        <module name="imooc-dubbo-order-api" />
+        <module name="imooc-dubbo-order-service" />
+        <module name="imooc-dubbo-web" />
+        <module name="jdks" />
+        <module name="jvm" />
+        <module name="jvm (1) (com.someecho)" />
+        <module name="netty-learning" />
+        <module name="nio" />
+        <module name="spring-data-elasticsearch" />
+        <module name="springs" />
+        <module name="threads" />
+        <module name="zk-curator-maven" />
+        <module name="zk-starter" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="algorithm-learning" target="1.8" />
+      <module name="datas" target="1.8" />
+      <module name="demo" target="1.8" />
+      <module name="es-demo" target="1.8" />
+      <module name="imooc-dubbo" target="1.8" />
+      <module name="imooc-dubbo-common" target="1.8" />
+      <module name="imooc-dubbo-item-api" target="1.8" />
+      <module name="imooc-dubbo-item-service" target="1.8" />
+      <module name="imooc-dubbo-order-api" target="1.8" />
+      <module name="imooc-dubbo-order-service" target="1.8" />
+      <module name="imooc-dubbo-web" target="1.8" />
+      <module name="interview" target="1.8" />
+      <module name="jdk8-learning" target="1.8" />
+      <module name="jdks" target="1.8" />
+      <module name="jvm" target="8" />
+      <module name="jvm (1) (com.someecho)" target="1.8" />
+      <module name="netty-learning" target="1.8" />
+      <module name="nio" target="1.8" />
+      <module name="spring-bean-learning" target="1.8" />
+      <module name="spring-data-elasticsearch" target="1.8" />
+      <module name="spring-data-jpa-demo" target="1.8" />
+      <module name="spring-data-redis-demo" target="1.8" />
+      <module name="spring-orm-demo" target="1.8" />
+      <module name="springboot-learning" target="1.8" />
+      <module name="springs" target="8" />
+      <module name="threads" target="1.8" />
+      <module name="zk-curator-maven" target="1.8" />
+      <module name="zk-learning" target="1.8" />
+      <module name="zk-starter" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
